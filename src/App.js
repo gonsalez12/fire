@@ -10,12 +10,15 @@ export default class App extends Component{
       nome: '',
       idade: '',
       tokenInput: '',
-      idadeInput: ''
+      idadeInput: '',
+      nomeInput: '',
+      idade2Input: ''
     };
 
     this.cadastrarToken = this.cadastrarToken.bind(this);
     this.cadastrarIdade = this.cadastrarIdade.bind(this);
     this.removerToken = this.removerToken.bind(this);
+    this.cadastroUsuario = this.cadastroUsuario.bind(this);
 
 
     let firebaseConfig = {
@@ -76,6 +79,16 @@ export default class App extends Component{
     firebase.database().ref('token').remove();
   }
 
+  cadastroUsuario(e){
+    let usuarios = firebase.database().ref('usuarios');
+    let chave = usuarios.push().key;
+    usuarios.child(chave).set({
+      nome: this.state.nomeInput,
+      idade: this.state.idade2Input
+    });
+    e.preventDefault();
+  }
+
   render(){
     const { token, nome, idade } = this.state;
     return(
@@ -97,7 +110,23 @@ export default class App extends Component{
           <br></br>
           <button type="submit">Cadastrar idade </button>
         </form>
+        <br></br>
 
+        Cadastro de usuario
+
+        <br></br>  
+              
+        <form onSubmit={this.cadastroUsuario}>
+        <input type="text" value={this.state.nomeInput} 
+            onChange={(e) => this.setState({nomeInput: e.target.value})} />
+          <br></br>
+          <input type="number" value={this.state.idade2Input} 
+            onChange={(e) => this.setState({idade2Input: e.target.value})} />
+          <br></br>
+          <button type="submit">Cadastrar Usuario </button>
+        </form>
+
+        
 
         <h1>Token: {token}</h1>
         <h1>Nome: {nome}</h1>
