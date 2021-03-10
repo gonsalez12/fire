@@ -12,7 +12,8 @@ export default class App extends Component{
       tokenInput: '',
       idadeInput: '',
       nomeInput: '',
-      idade2Input: ''
+      idade2Input: '',
+      lista: []
     };
 
     this.cadastrarToken = this.cadastrarToken.bind(this);
@@ -55,6 +56,23 @@ export default class App extends Component{
       state.idade = snapshot.val().idade;
       this.setState(state); 
      })
+
+     firebase.database().ref('usuarios').on('value', (snapshot) => {
+      let state = this.state;
+      state.lista = [];
+      snapshot.forEach((childItem) =>{
+
+        state.lista.push({
+          key: childItem.key,
+          nome: childItem.val().nome,
+          idade: childItem.val().idade
+        })
+
+      });
+
+      this.setState(state);
+
+     });
 
 
 
@@ -131,6 +149,22 @@ export default class App extends Component{
         <h1>Token: {token}</h1>
         <h1>Nome: {nome}</h1>
         <h1>Idade: {idade}</h1>
+
+        <hr></hr>
+        {
+          this.state.lista.map((item) =>{
+            return(
+              <div>
+                <h1>Token: {item.key}</h1>
+                <h1>Nome: {item.nome}</h1>
+                <h1>Idade: {item.idade}</h1>
+              </div>  
+            );
+          })
+        }
+
+
+
       </div>
     );
   }
